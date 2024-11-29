@@ -10,8 +10,13 @@ import time
 furhat = FurhatRemoteAPI("localhost")
 furhat.set_voice(name='Matthew')
 
+
+
+# use this for following faces
 thread = furhat.attend(location="0.0,0.0,1.0", async_req=True)
 
+
+# use something like this for the conversation
 furhat.say(text="Whoa there!", async_req=True)
 furhat.gesture(name="Surprise")
 time.sleep(1)
