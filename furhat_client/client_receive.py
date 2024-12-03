@@ -18,6 +18,7 @@ def main():
 
     # Set the voice of the robot
     furhat.set_voice(name='Matthew')
+    furhat.say(text="initiated")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('socket instantiated')
