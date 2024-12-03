@@ -2,7 +2,7 @@ from furhat_remote_api import FurhatRemoteAPI
 import time
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyDVzqHc8FxpPiyGFXe9jkdiiSqa8U5iuQ0")
+genai.configure(api_key="Your Google API Key")
 model=genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   system_instruction="""You are Bart the Bartender. It is your job to find out what 
