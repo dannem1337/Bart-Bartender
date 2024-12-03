@@ -37,13 +37,13 @@ def main():
         readySocks, _, _ = select.select(socks, [], [], 5)
         for sock in readySocks:
             message = receiveTextViaSocket(sock)
-            furhat.say(text=f"{message['no_faces']}", blockd=True)
             print('received: ' + str(message))
 
 
 def furhat_recieve_text(furhat, message):
     message = json.loads(message)
     result = furhat.listen()
+    furhat.say(text=f"{message['no_faces']}", blockd=True)
 
 
 def receiveTextViaSocket(sock):

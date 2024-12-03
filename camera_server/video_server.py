@@ -53,12 +53,7 @@ def detectFaces(frame, detector):
     for f in face:
         int_face.append([int(round(v)) for v in f])
     message = {
-<<<<<<< HEAD
-        # "faces_pos": face, #TODO: why can they be floats?
-        # "aus": aus,
-=======
         "faces_pos": int_face, 
->>>>>>> 77a651c (furhat connected)
         "no_faces": len(face)
     }
     print(message)
