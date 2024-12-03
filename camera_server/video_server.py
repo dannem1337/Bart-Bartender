@@ -39,7 +39,7 @@ def main():
             json_message = json.dumps(message)
             print('sending: ' + json_message)
             sendTextViaSocket(json_message, conn)
-            #time.sleep(1)
+            time.sleep(1)
         except:
             sock.shutdown(socket.SHUT_RDWR)
 
@@ -51,7 +51,7 @@ def detectFaces(frame, detector):
     face = detected_faces[0]
     aus = detected_aus[0]
     message = {
-        # "faces_pos": face, TODO: why can they be floats?
+        # "faces_pos": face, #TODO: why can they be floats?
         # "aus": aus,
         "no_faces": len(face)
     }
@@ -75,8 +75,6 @@ def sendTextViaSocket(message, sock):
         print('server acknowledged reception of text')
     else:
         print('error: server has sent back ' + ackText)
-    # end if
-# end function
 
 if __name__ == '__main__':
     main()
