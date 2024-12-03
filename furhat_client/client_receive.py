@@ -53,6 +53,7 @@ def main():
 
 
 def furhat_recieve_text(furhat, message):
+    # TODO add attention to furhat using message
     message = json.loads(message)
     user_input = furhat.listen()
     print("user message is:" + user_input.message)
