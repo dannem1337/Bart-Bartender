@@ -1,8 +1,8 @@
-# text_receive_client.py
-
 import socket
 import select
 import time
+import json
+from furhat_remote_api import FurhatRemoteAPI
 
 HOST = 'localhost'
 PORT = 65439
@@ -11,8 +11,14 @@ ACK_TEXT = 'text_received'
 
 
 def main():
-    
     # instantiate a socket object
+    furhat = FurhatRemoteAPI("localhost")
+    # Get the voices on the robot
+    voices = furhat.get_voices()
+
+    # Set the voice of the robot
+    furhat.set_voice(name='Matthew')
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('socket instantiated')
 
@@ -31,7 +37,14 @@ def main():
         readySocks, _, _ = select.select(socks, [], [], 5)
         for sock in readySocks:
             message = receiveTextViaSocket(sock)
+            furhat.say(text=f"{message['no_faces']}", blockd=True)
             print('received: ' + str(message))
+
+
+def furhat_recieve_text(furhat, message):
+    message = json.loads(message)
+    result = furhat.listen()
+
 
 def receiveTextViaSocket(sock):
     # get the text via the scoket

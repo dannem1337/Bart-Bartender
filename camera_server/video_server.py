@@ -48,11 +48,17 @@ def detectFaces(frame, detector):
     detected_landmarks = detector.detect_landmarks(frame, detected_faces)
     detected_aus = detector.detect_aus(frame, detected_landmarks)
     # Since we only are looking at one image
+    int_face = []
     face = detected_faces[0]
-    aus = detected_aus[0]
+    for f in face:
+        int_face.append([int(round(v)) for v in f])
     message = {
+<<<<<<< HEAD
         # "faces_pos": face, #TODO: why can they be floats?
         # "aus": aus,
+=======
+        "faces_pos": int_face, 
+>>>>>>> 77a651c (furhat connected)
         "no_faces": len(face)
     }
     print(message)
