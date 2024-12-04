@@ -3,11 +3,20 @@ import select
 import time
 import json
 from furhat_remote_api import FurhatRemoteAPI
+import google.generativeai as genai
 
 HOST = 'localhost'
 PORT = 65439
 
 ACK_TEXT = 'text_received'
+
+genai.configure(api_key="AIzaSyAN4EcYsU3-1rkAds7xBihH6F1zDjw9Pqo")
+model=genai.GenerativeModel(
+  model_name="gemini-1.5-flash",
+  system_instruction="""You are Bart the Bartender. It is your job to find out what 
+  cocktail fits the mood of the customer. Keep the converstion short and pleasant. 
+  Once the customer indicates they want the cocktail, you don't ask anymore what 
+  the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
 
 def main():
@@ -33,19 +42,28 @@ def main():
             pass
 
     socks = [sock]
-    while True:
+    done = False
+    while not done:
         readySocks, _, _ = select.select(socks, [], [], 5)
         for sock in readySocks:
             message = receiveTextViaSocket(sock)
-            result = furhat_recieve_text(furhat, message)
+            done = furhat_recieve_text(furhat, message)
             print('received: ' + str(message))
 
 
 def furhat_recieve_text(furhat, message):
+    # TODO add attention to furhat using message
     message = json.loads(message)
-    result = furhat.listen()
-    furhat.say(text=f"{message['no_faces']}", blocking=True)
-    return result
+    user_input = furhat.listen()
+    print("user message is: " + user_input.message)
+    # TODO: fix crash if message is empty
+    ai_response = model.generate_content(user_input.message)
+    print("AI response is: " + ai_response.text)
+    furhat.say(text=ai_response.text, blocking=True)
+    if "Here you go!" in ai_response.text:
+        return True
+    return False
+    # furhat.say(text=f"{message['no_faces']}", blocking=True)
 
 
 def receiveTextViaSocket(sock):
