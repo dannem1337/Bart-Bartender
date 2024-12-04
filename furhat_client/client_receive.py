@@ -54,6 +54,23 @@ def main():
 def furhat_recieve_text(furhat, message):
     # TODO add attention to furhat using message
     message = json.loads(message)
+    # attending only to the first face
+    position_value = message['faces_pos'][0]
+    print(position_value)
+    x = position_value[0]
+    x = -25
+    y = position_value[1]
+    y = 0
+    width = position_value[2]
+    height = position_value[3]
+    attend_x = (str) (x)
+    attend_y = (str) (y)
+    # attend_x = (str) (x + (width/2))
+    # attend_y = (str) (y + (height/2))
+    attend_z = "1.0"
+    attend_location = attend_x + "," + attend_y + "," + attend_z
+    print(attend_location)
+    furhat.attend(location=attend_location)
     user_input = furhat.listen()
     print("user message is: " + user_input.message)
     # TODO: fix crash if message is empty
