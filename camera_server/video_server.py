@@ -51,6 +51,7 @@ def detectFaces(frame, detector):
     int_face = []
     face = detected_faces[0]
     for f in face:
+        # v = x,y,width,height
         int_face.append([int(round(v)) for v in f])
     message = {
         "faces_pos": int_face, 

@@ -41,7 +41,6 @@ def main():
         except:
             pass
 
-    furhat.say(text="Hello, what can I do for you today?")
     socks = [sock]
     done = False
     while not done:
@@ -56,9 +55,10 @@ def furhat_recieve_text(furhat, message):
     # TODO add attention to furhat using message
     message = json.loads(message)
     user_input = furhat.listen()
-    print("user message is:" + user_input.message)
+    print("user message is: " + user_input.message)
+    # TODO: fix crash if message is empty
     ai_response = model.generate_content(user_input.message)
-    print(ai_response.text)
+    print("AI response is: " + ai_response.text)
     furhat.say(text=ai_response.text, blocking=True)
     if "Here you go!" in ai_response.text:
         return True
