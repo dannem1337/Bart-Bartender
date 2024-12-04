@@ -10,14 +10,13 @@ PORT = 65439
 
 ACK_TEXT = 'text_received'
 
-genai.configure(api_key="Your API key")
+genai.configure(api_key="AIzaSyAN4EcYsU3-1rkAds7xBihH6F1zDjw9Pqo")
 model=genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   system_instruction="""You are Bart the Bartender. It is your job to find out what 
-  cocktail fits the mood of the one that is talking to you. You do this by asking
-  considerate but short questions. Questions should be less than 2 sentences. After
-  3 questions you should suggest a cocktail that fits the mood of the user. Once
-  you suggest a cocktail, you should stop asking questions""")
+  cocktail fits the mood of the customer. Keep the converstion short and pleasant. 
+  Once the customer indicates they want the cocktail, you don't ask anymore what 
+  the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
 
 def main():
@@ -44,11 +43,12 @@ def main():
 
     furhat.say(text="Hello, what can I do for you today?")
     socks = [sock]
-    while True:
+    done = False
+    while not done:
         readySocks, _, _ = select.select(socks, [], [], 5)
         for sock in readySocks:
             message = receiveTextViaSocket(sock)
-            furhat_recieve_text(furhat, message)
+            done = furhat_recieve_text(furhat, message)
             print('received: ' + str(message))
 
 
@@ -60,6 +60,9 @@ def furhat_recieve_text(furhat, message):
     ai_response = model.generate_content(user_input.message)
     print(ai_response.text)
     furhat.say(text=ai_response.text, blocking=True)
+    if "Here you go!" in ai_response.text:
+        return True
+    return False
     # furhat.say(text=f"{message['no_faces']}", blocking=True)
 
 
