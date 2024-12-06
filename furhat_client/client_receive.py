@@ -4,13 +4,18 @@ import time
 import json
 from furhat_remote_api import FurhatRemoteAPI
 import google.generativeai as genai
+import asyncio
+from dotenv import load_dotenv
+import os
+load_dotenv(".env")
+
 
 HOST = 'localhost'
 PORT = 65439
 
 ACK_TEXT = 'text_received'
 
-genai.configure(api_key="AIzaSyAN4EcYsU3-1rkAds7xBihH6F1zDjw9Pqo")
+genai.configure(api_key=os.getenv("API_KEY"))
 model=genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   system_instruction="""You are Bart the Bartender. It is your job to find out what 
@@ -18,75 +23,66 @@ model=genai.GenerativeModel(
   Once the customer indicates they want the cocktail, you don't ask anymore what 
   the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
+async def listen_and_process(furhat):
+    while True:
+        # Start listening asynchronously
+        result = await asyncio.to_thread(furhat.listen)
+        if result.message != '':
+            print("user message is: " + result.message)
+            ai_response = model.generate_content(result.message)
+            print("AI response is: " + ai_response.text)
+            furhat.say(text=ai_response.text)
 
-def main():
-    # instantiate a socket object
+            ## Maybe here we just wait for the next customer?
+            # if "Here you go!" in ai_response.text:
+            #     return True
+            # return False
+
+        print(f"Furhat listened and got: {result}")
+
+async def handle_socket(sock, furhat):
+    """Asynchronously handle socket messages."""
+    reader, writer = await asyncio.open_connection(sock=sock)
+    while True:
+        message = await reader.read(1024)
+        if not message:
+            print('Socket connection closed')
+            break
+
+        # Decode and process message
+        decoded_message = message.decode('utf-8')
+        print(f"Received from socket: {decoded_message}")
+
+        # load to dictionary
+        # message_data = json.loads(decoded_message)
+
+
+        # Send acknowledgment
+        writer.write(ACK_TEXT.encode('utf-8'))
+        await writer.drain()
+
+async def main():
     furhat = FurhatRemoteAPI("localhost")
-    # Get the voices on the robot
-    voices = furhat.get_voices()
-
-    # Set the voice of the robot
     furhat.set_voice(name='Matthew')
+    print('Furhat API initialized')
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print('socket instantiated')
+    print('Socket instantiated')
 
-    # connect the socket
-    connectionSuccessful = False
-    while not connectionSuccessful:
+    # Connect the socket, retry if we didnot succeed
+    while True:
         try:
-            sock.connect((HOST, PORT))    # Note: if execution gets here before the server starts up, this line will cause an error, hence the try-except
-            print('socket connected')
-            connectionSuccessful = True
-        except:
-            pass
+            sock.connect((HOST, PORT))
+            print('Socket connected')
+            break
+        except ConnectionRefusedError:
+            await asyncio.sleep(1)  
 
-    socks = [sock]
-    done = False
-    while not done:
-        readySocks, _, _ = select.select(socks, [], [], 5)
-        for sock in readySocks:
-            message = receiveTextViaSocket(sock)
-            done = furhat_recieve_text(furhat, message)
-            print('received: ' + str(message))
-
-
-def furhat_recieve_text(furhat, message):
-    # TODO add attention to furhat using message
-    message = json.loads(message)
-    user_input = furhat.listen()
-    print("user message is: " + user_input.message)
-    # TODO: fix crash if message is empty
-    ai_response = model.generate_content(user_input.message)
-    print("AI response is: " + ai_response.text)
-    furhat.say(text=ai_response.text, blocking=True)
-    if "Here you go!" in ai_response.text:
-        return True
-    return False
-    # furhat.say(text=f"{message['no_faces']}", blocking=True)
-
-
-def receiveTextViaSocket(sock):
-    # get the text via the scoket
-    encodedMessage = sock.recv(1024)
-
-    # if we didn't get anything, log an error and bail
-    if not encodedMessage:
-        print('error: encodedMessage was received as None')
-        return None
-    # end if
-
-    # decode the received text message
-    message = encodedMessage.decode('utf-8')
-
-    # now time to send the acknowledgement
-    # encode the acknowledgement text
-    encodedAckText = bytes(ACK_TEXT, 'utf-8')
-    # send the encoded acknowledgement text
-    sock.sendall(encodedAckText)
-
-    return message
-# end function
+    # Run tasks concurrently
+    await asyncio.gather(
+        handle_socket(sock, furhat),
+        listen_and_process(furhat)
+    )
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

@@ -39,7 +39,7 @@ def main():
             json_message = json.dumps(message)
             print('sending: ' + json_message)
             sendTextViaSocket(json_message, conn)
-            time.sleep(1)
+            # time.sleep(1)
         except:
             sock.shutdown(socket.SHUT_RDWR)
 
