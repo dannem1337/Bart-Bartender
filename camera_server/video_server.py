@@ -2,14 +2,11 @@ import socket
 import select
 import time
 import cv2
+import pandas as pd
 import feat
 import json
 import warnings
-
-#__________________________________NYTT
 import joblib
-RF_model = joblib.load('4646_NoSMOTE_RF_emotion_model.pkl')
-#___________________________________NYTT-slut
 
 
 HOST = 'localhost'
@@ -36,34 +33,30 @@ def main():
     conn, addr = sock.accept()      # Note: execution waits here until the client calls sock.connect()
     print('socket accepted, got connection object')
     capture = cv2.VideoCapture(0)
+
+    with open("rf_model.pkl", "rb") as f:
+        model = joblib.load(f)
+
     detector = feat.Detector(device="cpu")
+
 
     while True:
         try: 
             ret, frame = capture.read() 
-            message = detectFaces(frame, detector)
+            message = detectFaces(frame, detector, model)
             json_message = json.dumps(message)
             print('sending: ' + json_message)
             sendTextViaSocket(json_message, conn)
-            # time.sleep(1)
         except:
             sock.shutdown(socket.SHUT_RDWR)
 
-def predictEmotion(au_values):
-    pass
-
-
-def detectFaces(frame, detector):
+def detectFaces(frame, detector, model):
     detected_faces = detector.detect_faces(frame)
     detected_landmarks = detector.detect_landmarks(frame, detected_faces)
     detected_aus = detector.detect_aus(frame, detected_landmarks)
-    # TODO: Use AU values for emotion detection
-    # Since we only are looking at one image
 
-    #__________________________________NYTT-start
-    emotion=predictEmotion(detected_aus, RF_model)
-    #__________________________________NYTT-start
-    
+    emotions = predictEmotion(detected_aus[0], model)
+    print(emotions)
     int_face = []
     face = detected_faces[0]
     for f in face:
@@ -71,16 +64,21 @@ def detectFaces(frame, detector):
         int_face.append([int(round(v)) for v in f])
     message = {
         "faces_pos": int_face, 
-        "no_faces": len(face) # TODO add emotion
+        "emotions": emotions,
+        "no_faces": len(face) 
     }
-    print(message)
-    return message, emotion #Vet inte om emotion ska returnas här eller läggas in i message?
+    return message
 
-#__________________________________NYTT-start
-def predictEmotion(AU_values, model ):
-    emotion= model.predict([AU_values]) [0] #Predictar första ansiktet som upptäcks
+def predictEmotion(au_values, model):
+    emotion = []
+    columns = ['AU01', 'AU02', 'AU04', 'AU05', 'AU06', 'AU07', 'AU09', 'AU10', 
+           'AU11', 'AU12', 'AU14', 'AU15', 'AU17', 'AU20', 'AU23', 'AU24', 'AU25', 
+           'AU26', 'AU28', 'AU43']
+    for au in au_values:
+        print(au)
+        df = pd.DataFrame([au], columns=columns)
+        emotion.append(model.predict(df)[0]) 
     return emotion 
-#___________________________________NYTT-slut
         
 
 def sendTextViaSocket(message, sock):
