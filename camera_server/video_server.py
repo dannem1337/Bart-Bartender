@@ -6,6 +6,12 @@ import feat
 import json
 import warnings
 
+#__________________________________NYTT
+import joblib
+RF_model = joblib.load('4646_NoSMOTE_RF_emotion_model.pkl')
+#___________________________________NYTT-slut
+
+
 HOST = 'localhost'
 PORT = 65439
 
@@ -48,6 +54,11 @@ def detectFaces(frame, detector):
     detected_landmarks = detector.detect_landmarks(frame, detected_faces)
     detected_aus = detector.detect_aus(frame, detected_landmarks)
     # Since we only are looking at one image
+
+    #__________________________________NYTT-start
+    emotion=predictEmotion(detected_aus, RF_model)
+    #__________________________________NYTT-start
+    
     int_face = []
     face = detected_faces[0]
     for f in face:
@@ -58,7 +69,13 @@ def detectFaces(frame, detector):
         "no_faces": len(face)
     }
     print(message)
-    return message
+    return message, emotion #Vet inte om emotion ska returnas här eller läggas in i message?
+
+#__________________________________NYTT-start
+def predictEmotion(AU_values, model ):
+    emotion= model.predict([AU_values]) [0] #Predictar första ansiktet som upptäcks
+    return emotion 
+#___________________________________NYTT-slut
         
 
 def sendTextViaSocket(message, sock):
