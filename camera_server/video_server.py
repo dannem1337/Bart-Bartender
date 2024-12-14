@@ -49,10 +49,15 @@ def main():
         except:
             sock.shutdown(socket.SHUT_RDWR)
 
+def predictEmotion(au_values):
+    pass
+
+
 def detectFaces(frame, detector):
     detected_faces = detector.detect_faces(frame)
     detected_landmarks = detector.detect_landmarks(frame, detected_faces)
     detected_aus = detector.detect_aus(frame, detected_landmarks)
+    # TODO: Use AU values for emotion detection
     # Since we only are looking at one image
 
     #__________________________________NYTT-start
@@ -66,7 +71,7 @@ def detectFaces(frame, detector):
         int_face.append([int(round(v)) for v in f])
     message = {
         "faces_pos": int_face, 
-        "no_faces": len(face)
+        "no_faces": len(face) # TODO add emotion
     }
     print(message)
     return message, emotion #Vet inte om emotion ska returnas här eller läggas in i message?

@@ -82,11 +82,12 @@ target/
 profile_default/
 ipython_config.py
 
-#redundant latex files
+#redundant tex files
 *.fls
 *.aux
 *.fdb_latexmk
 *.synctex.gz
+*.log
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
