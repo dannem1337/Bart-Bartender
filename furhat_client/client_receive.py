@@ -23,9 +23,8 @@ model=genai.GenerativeModel(
   Once the customer indicates they want the cocktail, you don't ask anymore what 
   the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
-async def listen_and_process(furhat, message_queue):
+async def listen_and_process(furhat, chat, message_queue):
     while True:
-
         message_data = None
         while not message_queue.empty():
             message_data = await message_queue.get()
@@ -53,7 +52,7 @@ async def listen_and_process(furhat, message_queue):
                 case "sad":
                     prompt = "TODO\n"
             print("user message is: " + result.message)
-            ai_response = model.generate_content(prompt + result.message)
+            ai_response = chat.send_message(prompt + result.message)
             print("AI response is: " + ai_response.text)
             furhat.say(text=ai_response.text)
 
@@ -97,6 +96,7 @@ async def main():
     furhat = FurhatRemoteAPI("localhost")
     furhat.set_voice(name='Matthew')
     print('Furhat API initialized')
+    chat = model.start_chat()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('Socket instantiated')
@@ -114,7 +114,7 @@ async def main():
     # Run tasks concurrently
     await asyncio.gather(
         handle_socket(sock, furhat, message_queue),
-        listen_and_process(furhat, message_queue)
+        listen_and_process(furhat, chat, message_queue)
     )
 
 if __name__ == '__main__':
