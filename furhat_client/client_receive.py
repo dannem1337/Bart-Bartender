@@ -23,13 +23,37 @@ model=genai.GenerativeModel(
   Once the customer indicates they want the cocktail, you don't ask anymore what 
   the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
-async def listen_and_process(furhat):
+async def listen_and_process(furhat, message_queue):
     while True:
+
+        message_data = None
+        while not message_queue.empty():
+            message_data = await message_queue.get()
+        
+        print(f"Message received for processing: {message_data}")
+
         # Start listening asynchronously
         result = await asyncio.to_thread(furhat.listen)
-        if result.message != '':
+        if (result.message != '') and (message_data != None):
+            prompt = ""
+            print("\n\nTAKING EMOTIONS\n\n")
+            match message_data['emotions'][0]:
+                case "angry":
+                    prompt = "TODO\n"
+                case "neutral":
+                    prompt = "TODO\n"
+                case "happy":
+                    prompt = "TODO\n"
+                case "suprised":
+                    prompt = "TODO\n"
+                case "fear":
+                    prompt = "TODO\n"
+                case "disgust":
+                    prompt = "TODO\n"
+                case "sad":
+                    prompt = "TODO\n"
             print("user message is: " + result.message)
-            ai_response = model.generate_content(result.message)
+            ai_response = model.generate_content(prompt + result.message)
             print("AI response is: " + ai_response.text)
             furhat.say(text=ai_response.text)
 
@@ -40,7 +64,7 @@ async def listen_and_process(furhat):
 
         print(f"Furhat listened and got: {result}")
 
-async def handle_socket(sock, furhat):
+async def handle_socket(sock, furhat, message_queue):
     """Asynchronously handle socket messages."""
     reader, writer = await asyncio.open_connection(sock=sock)
     while True:
@@ -51,10 +75,18 @@ async def handle_socket(sock, furhat):
 
         # Decode and process message
         decoded_message = message.decode('utf-8')
-        print(f"Received from socket: {decoded_message}")
+        # print(f"Received from socket: {decoded_message}")
 
         # load to dictionary
         # message_data = json.loads(decoded_message)
+        try:
+            message_data = json.loads(decoded_message)
+            # Send message to the queue for processing
+            await message_queue.put(message_data)
+        except json.JSONDecodeError:
+            print("Failed to decode JSON message")
+
+
 
 
         # Send acknowledgment
@@ -78,10 +110,11 @@ async def main():
         except ConnectionRefusedError:
             await asyncio.sleep(1)  
 
+    message_queue = asyncio.Queue()
     # Run tasks concurrently
     await asyncio.gather(
-        handle_socket(sock, furhat),
-        listen_and_process(furhat)
+        handle_socket(sock, furhat, message_queue),
+        listen_and_process(furhat, message_queue)
     )
 
 if __name__ == '__main__':
