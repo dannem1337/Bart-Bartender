@@ -15,7 +15,7 @@ PORT = 65439
 
 ACK_TEXT = 'text_received'
 
-genai.configure(api_key=os.getenv("API_KEY"))
+genai.configure(api_key="API")
 model=genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   system_instruction="""You are Bart the Bartender. It is your job to find out what 
@@ -34,27 +34,27 @@ async def listen_and_process(furhat, chat, message_queue):
         # Start listening asynchronously
         result = await asyncio.to_thread(furhat.listen)
         if (result.message != '') and (message_data != None):
-            prompt = ""
+            prompt = "Now answer keeping in mind that i am"
             print("\n\nTAKING EMOTIONS\n\n")
             match message_data['emotions'][0]:
                 case "angry":
-                    prompt = "TODO\n"
+                    prompt += "angry\n"
                 case "neutral":
-                    prompt = "TODO\n"
+                    prompt += "neutral\n"
                 case "happy":
-                    prompt = "TODO\n"
+                    prompt += "happy\n"
                 case "suprised":
-                    prompt = "TODO\n"
+                    prompt += "suprised\n"
                 case "fear":
-                    prompt = "TODO\n"
+                    prompt += "concerned\n"
                 case "disgust":
-                    prompt = "TODO\n"
+                    prompt += "disgusted\n"
                 case "sad":
-                    prompt = "TODO\n"
+                    prompt += "sad\n"
             print("user message is: " + result.message)
             ai_response = chat.send_message(prompt + result.message)
             print("AI response is: " + ai_response.text)
-            furhat.say(text=ai_response.text)
+            furhat.say(text=ai_response.text, blocking = True)
 
             ## Maybe here we just wait for the next customer?
             # if "Here you go!" in ai_response.text:
