@@ -107,11 +107,24 @@ After this is done, furhat starts listening to the user again and this process i
 Once Bart finds a fitting cocktail it says `Here you go' and afterwards listens to input from a new user.
 
 \subsubsection{Result}
-- works well in general, it finds a cocktail based on the input of the user relatively quickly
-objectives from specification:
-- come up with recommendations based on emotional state -> reflects on current emotional state of user
-- take the preferences of the client into account -> automatically happens due to prompting of llm
-- make sure the conversation is pleasant -> subjective, hard to tell (conduct interviews etc.)
+In the project proposal, we described several objectives that we expect our bartender to fullfill.
+We can test our product by confirming it adheres to the set objectives.
+
+One of the objectives is that our product gives recommendations to the user, based on the user's emotional state.
+We add the mood of the user to the prompt that we send to Gemini.
+Because of this, Gemini will take both the emotion of the user as well as the user's speech into account when generating a response.
+
+Another objective is that Bart should take the user's preferences into account. 
+We achieve this by letting Gemini generate questions that explores the needs and preferences of the user.
+Gemini incorporates current and previous answers of this user into the recommendation.
+
+The last objective is a more subjective one and because of this it is harder to test than the previous objectives.
+We decided to analyse this by doing \dots
+% - works well in general, it finds a cocktail based on the input of the user relatively quickly
+% objectives from specification:
+% - come up with recommendations based on emotional state -> reflects on current emotional state of user
+% - take the preferences of the client into account -> automatically happens due to prompting of llm
+% - make sure the conversation is pleasant -> subjective, hard to tell (conduct interviews etc.)
 
 \section{General Discussion}
 Adria
