@@ -15,7 +15,7 @@ PORT = 65439
 
 ACK_TEXT = 'text_received'
 
-genai.configure(api_key="API")
+genai.configure(api_key=os.getenv("API_KEY"))
 model=genai.GenerativeModel(
   model_name="gemini-1.5-flash",
   system_instruction="""You are Bart the Bartender. It is your job to find out what 
@@ -24,19 +24,38 @@ model=genai.GenerativeModel(
   the customer wants. In that case you say: \"Here you go!\" and   nothing more.""")
 
 async def listen_and_process(furhat, chat, message_queue):
+    message_data = None
+    collected_messages = {
+        "angry": 0,
+        "neutral": 0,
+        "happy": 0,
+        "surprise": 0,
+        "fear": 0,
+        "disgust": 0,
+        "sad": 0
+    }
     while True:
-        message_data = None
-        while not message_queue.empty():
-            message_data = await message_queue.get()
-        
-        print(f"Message received for processing: {message_data}")
+        # Spin on while if there is no costumer there
+        result = None
+        while result is None or result.message == '' or message_data is None:
+            print("in while")
+            while not message_queue.empty():
+                message_data = await message_queue.get()
+                collected_messages[message_data['emotions'][0]] += 1
+                print(f"Processed message data: {message_data}")
 
-        # Start listening asynchronously
-        result = await asyncio.to_thread(furhat.listen)
-        if (result.message != '') and (message_data != None):
+            if result is None or result.message == '':
+                result = await asyncio.to_thread(furhat.listen)
+                print(f"Listening result: {result}")
+
+
+        while True:
+            print(collected_messages)
             prompt = "Now answer keeping in mind that i am"
-            print("\n\nTAKING EMOTIONS\n\n")
-            match message_data['emotions'][0]:
+            # Only considering 1 person
+            if message_data['no_faces'] == 0: continue
+            current_emotion = max(collected_messages, key= lambda x: collected_messages[x])
+            match current_emotion:
                 case "angry":
                     prompt += "angry\n"
                 case "neutral":
@@ -55,15 +74,25 @@ async def listen_and_process(furhat, chat, message_queue):
             ai_response = chat.send_message(prompt + result.message)
             print("AI response is: " + ai_response.text)
             furhat.say(text=ai_response.text, blocking = True)
+            if "Here you go!" in ai_response.text:
+                # Reset, new person incoming
+                collected_messages = {
+                    "angry": 0,
+                    "neutral": 0,
+                    "happy": 0,
+                    "surprise": 0,
+                    "fear": 0,
+                    "disgust": 0,
+                    "sad": 0
+                }
+                while not message_queue.empty():
+                    message_data = await message_queue.get()
+                print("we are done")
+                break;
+            result = await asyncio.to_thread(furhat.listen)
 
-            ## Maybe here we just wait for the next customer?
-            # if "Here you go!" in ai_response.text:
-            #     return True
-            # return False
 
-        print(f"Furhat listened and got: {result}")
-
-async def handle_socket(sock, furhat, message_queue):
+async def handle_socket(sock, message_queue):
     """Asynchronously handle socket messages."""
     reader, writer = await asyncio.open_connection(sock=sock)
     while True:
@@ -81,7 +110,8 @@ async def handle_socket(sock, furhat, message_queue):
         try:
             message_data = json.loads(decoded_message)
             # Send message to the queue for processing
-            await message_queue.put(message_data)
+            if message_data['no_faces'] != 0: 
+                await message_queue.put(message_data)
         except json.JSONDecodeError:
             print("Failed to decode JSON message")
 
@@ -113,7 +143,7 @@ async def main():
     message_queue = asyncio.Queue()
     # Run tasks concurrently
     await asyncio.gather(
-        handle_socket(sock, furhat, message_queue),
+        handle_socket(sock, message_queue),
         listen_and_process(furhat, chat, message_queue)
     )
 

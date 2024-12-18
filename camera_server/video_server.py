@@ -18,6 +18,12 @@ warnings.filterwarnings("ignore", module="feat")
 
 def main():
     # instantiate a socket object
+    capture = cv2.VideoCapture(0)
+
+    with open("rf_model.pkl", "rb") as f:
+        model = joblib.load(f)
+
+    detector = feat.Detector(device="cpu")
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('socket instantiated')
 
@@ -32,12 +38,6 @@ def main():
     # accept the socket response from the client, and get the connection object
     conn, addr = sock.accept()      # Note: execution waits here until the client calls sock.connect()
     print('socket accepted, got connection object')
-    capture = cv2.VideoCapture(0)
-
-    with open("rf_model.pkl", "rb") as f:
-        model = joblib.load(f)
-
-    detector = feat.Detector(device="cpu")
 
 
     while True:
