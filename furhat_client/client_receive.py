@@ -36,6 +36,7 @@ async def listen_and_process(furhat, chat, message_queue):
     }
     while True:
         # Spin on while if there is no costumer there
+        furhat.say(text="Hello, what Cocktail can I get for you?", blocking=True)
         result = None
         while result is None or result.message == '' or message_data is None:
             print("in while")
@@ -51,7 +52,7 @@ async def listen_and_process(furhat, chat, message_queue):
 
         while True:
             print(collected_messages)
-            prompt = "Now answer keeping in mind that i am"
+            prompt = "Now answer keeping in mind that i am "
             # Only considering 1 person
             if message_data['no_faces'] == 0: continue
             current_emotion = max(collected_messages, key= lambda x: collected_messages[x])
@@ -70,7 +71,7 @@ async def listen_and_process(furhat, chat, message_queue):
                     prompt += "disgusted\n"
                 case "sad":
                     prompt += "sad\n"
-            print("user message is: " + result.message)
+            print("user message is: " + prompt + result.message)
             ai_response = chat.send_message(prompt + result.message)
             print("AI response is: " + ai_response.text)
             furhat.say(text=ai_response.text, blocking = True)
@@ -88,7 +89,7 @@ async def listen_and_process(furhat, chat, message_queue):
                 while not message_queue.empty():
                     message_data = await message_queue.get()
                 print("we are done")
-                break;
+                break
             result = await asyncio.to_thread(furhat.listen)
 
 
