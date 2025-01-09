@@ -62,16 +62,15 @@ component, formatting, style, styling, insert.
 \end{IEEEkeywords}
 
 \section{Introduction}
-\textbf{Linnea + Danyal}
-
-The objective of the project was to design and develop "Bart", a bartender capable of reading the client's emotional state and providing drink recommendations aligning with the detected mood while engaging in a pleasant conversation. In addition, the system takes into account the individual drink preferences of the clients to ensure a satisfying experience. These specific objectives were chosen in the beginning of the project, as the group members believed they were essential for creating a meaningful project connected to the course work. 
+\textbf{Linnea + Danyal}\\
+The objective of the project was to design and develop "Bart", a bartender capable of reading the user's emotional state and providing drink recommendations aligning with the detected mood while engaging in a pleasant conversation. In addition, the system takes into account the individual drink preferences of the users to ensure a satisfying experience. These specific objectives were chosen in the beginning of the project, as the group members believed they were essential for creating a meaningful project connected to the course work. 
 The work for this project was divided into two primary subsystems: the Perception Subsystem and the Interaction Subsystem. 
 
 \begin{itemize}
-    \item \textbf{Linnéa} and \textbf{Danyal} were responsible for developing the perception subsystem. They built a video server capable of detecting faces and recognizing emotions, with the help of a Random Forest (RF) machine learning model to classify mood based on facial expressions.
+    \item \textbf{Linnéa} and \textbf{Danyal} were responsible for developing the perception subsystem. They built a video server together with a client to connect to the interaction system. The video server is capable of detecting faces and recognizing emotions, with the help of a Random Forest (RF) machine learning model to classify mood based on facial expressions.
     
     
-    \item \textbf{Adrià} and \textbf{Walter} focused on the interaction subsystem. Their work involved setting up the Furhat robot, integrating a Large Language Model (LLM) into Furhat, and designing the system to translate detected emotions and client preferences into prompts for generating personalized drink recommendations.
+    \item \textbf{Adrià} and \textbf{Walter} focused on the interaction subsystem. Their work involved setting up the Furhat robot, integrating a Large Language Model (LLM) into Furhat, and designing the system to translate detected emotions and user preferences into prompts for generating personalized drink recommendations.
 
 \end{itemize}
 
@@ -86,8 +85,7 @@ This section describes the methodology and system architecture used in the proje
 \textbf{Linnea + Danyal}
 
 
-The scenario chosen for this project is as said in previous sections a bartender. The primary task of Bart, our bartender, is to read the customer's emotional state and offer drink recommendations based on their mood. Additionally, the system personalizes the recommendations by taking into account the client's individual drink preferences from engaging in a pleasant conversation with the user. This ensures a more enjoyable experience. 
-\\
+The scenario chosen for this project is as said in previous sections a bartender. The primary task of Bart, our bartender, is to analyze the customer's emotional state and offer drink recommendations based on their mood. Additionally, the system personalizes the recommendations by taking into account the customer's individual drink preferences from engaging in a pleasant conversation with the customer. This ensures a more enjoyable experience.\\The system consists of multiple parts combined into one functional, smooth system accomplishing the below stated high level goals.\\
 \\
 \textbf{HIGH-LEVEL GOALS:}
 \\
@@ -100,12 +98,46 @@ The scenario chosen for this project is as said in previous sections a bartender
 \end{enumerate}
 
 \textcolor{red}{\textbf{What specific choices did you make to achieve the high-level goals?}}
-
-
-
-
+\\
+To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speach input. 
+\\
+\\
+\\
 \subsection{User perception sub-system}
 \textbf{Linnea + Danyal}
+\subsubsection{Server design}
+
+\subsubsection{Machine Learning Design}
+The random forest machine learning model for emotion detection was developed through several steps with the goal to optimize performance. Before deciding on random forests as the primary model, several other machine learning approaches were explored, including Support Vector Machines (SVM), boosting, and neural networks. This process is discussed more thoroughly in the discussion headline of this report.\\ The first step in building the model was identifying and preparing a dataset suitable for the emotion detection task. \\ \textcolor{red}{\textbf{(Adrià, please provide details about the dataset, such as its source, size, and any preprocessing steps applied)}}\\
+Once the dataset was prepared, it was split into an 80\% training set and a 20\% test set using stratified sampling to keep the original class distribution. An initial analysis of the class distribution revealed significant imbalances in the emotion categories:
+\begin{itemize}
+    \item Neutral: 20.97\%
+	\item Happy: 20.95\%
+	\item Surprise: 16.86\%
+	\item Sad: 11.95\%
+	\item Fear: 11.74\%
+	\item Angry: 10.42\%
+	\item Disgust: 7.11\%
+\end{itemize}	
+To address this imbalance, the Synthetic Minority Oversampling Technique (SMOTE) was applied to the training set, resulting in a more even distribution across classes. SMOTE is a technique to balance uneven distribution of classes by synthesizing samples in minority classes. The selection of synthesized value is decided through k-nearest neighbors within the class in question. This was done to avoid overfitting and bias in the training dataset.  
+\\Following this, a baseline random forest model was trained.
+This baseline model was then optimized with the help of a thorough grid search in the process of finding a better accuracy and stability. A random search was initially included in the process, which later was removed from the code to make it more concise, as its performance did not match that of the grid search using GridSearchCV.
+\\
+The hyperparameters tuned during this process included:
+\begin{itemize}
+    \item Number of estimators (n\_estimators)
+	\item Maximum tree depth (max\_depth)
+	\item Minimum samples for node splits and leaves (min\_samples\_split, min\_samples\_leaf)
+	\item Number of features considered for splitting (max\_features)
+	\item Use of bootstrapping (bootstrap)
+\end{itemize}	
+    
+The optimization process had 5-fold cross-validation.
+Model performance was assessed using a classification report that included precision, recall, F1-score, and accuracy.
+\\The above mentioned process was repeated but this time without the SMOTE to compare the performances of the resulting models. This process proved the model without the SMOTE to be the best performing model. This model had the Best Hyperparameters: 
+\texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%.\\
+
+\subsubsection{Combined Functionality of server and ML-model}
 
 \subsection{Interaction sub-system} %Walter + Danyal
 This section discusses the second subsystem of Bart the bartender. 
@@ -113,7 +145,7 @@ It goes over the high-level design and its implementation.
 Afterwards it evaluates the obtained results.
 
 \subsubsection{Design}
-The interaction sub-system in this project consists of the virtual furhat, Gemini and a connection to the video server.
+The interaction sub-system in this project consists of the virtual Furhat, Gemini and a connection to the video server.
 Furhat is used as the interface between the system and the user and Gemini is used to generate a response to the input of the user.
 The response is based on what the user says and what emotion is detected in the face of the user at the beginning of the conversation.
 This response is then sent to Furhat so that it can reply to the user.
@@ -174,7 +206,11 @@ By doing this, we hope to make the conversation as pleasant as possible.
 % - make sure the conversation is pleasant -> subjective, hard to tell (conduct interviews etc.)
 
 \section{General Discussion}
-Adria
+Adria\\
+The path to selecting the Random Forest model involved several steps and a lot of experimentation with different approaches. First we explored building our own neural networks, specifically multilayer feedforward neural networks using a gradient backpropagation algorithm. We tested various architectures to improve the accuracy of emotion classification. However, this approach was highly time-consuming in terms of training and optimizing the networks. The results were also often unstable, and fine-tuning the neural network models required more resources and time than the scope of our project and expertise would allow.
+\\
+Next we found a pre-trained model for facial recognition from a competition on Kaggle \textcolor{red}{\textbf(reference to the Kaggle model)}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right. \\
+Due to this we shifted our focus to other machine learning methods. We experimented with Support Vector Machines (SVM), Boosting models, and finally, Random Forest models. After thorough testing, we found that the Random Forest model had best balance of accuracy and stability even though we would preferably have wanted to have more time to improve its results, this was however not possible considering our work load combined with other courses. The RF-model performance was consistent across test runs, and due to this it ultimately became the chosen model for our system.
 \subsection{Overall Pipeline}
 Adria
 \subsection{Challenges}
