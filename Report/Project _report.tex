@@ -17,17 +17,13 @@
 
 \begin{document}
 
-\title{Conference Paper Title*\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured for https://ieeexplore.ieee.org  and
-should not be used}
-\thanks{Identify applicable funding agency here. If none, delete this.}
-}
+\title{Bart the Bartender}
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Danyal Mirza}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\textit{}\\
+Uppsala, Sweden\\
+danyal.mirza.7311@student.uu.se}
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Linnéa Soto Carlsson}
 \IEEEauthorblockA{\textit{Department of Computer Science} \\
@@ -100,14 +96,19 @@ The scenario chosen for this project is as said in previous sections a bartender
 
 \textcolor{red}{\textbf{What specific choices did you make to achieve the high-level goals?}}
 \\
-To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speach input. 
+To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speech input. 
 \\
 \\
 \\
 \subsection{User perception sub-system}
 \textbf{Linnea + Danyal}
 \subsubsection{Server design}
-
+To allow emotion detection, a video server had to be created that captured video of user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
+\begin{itemize}
+    \item Number of faces detected
+    \item Values representing location of the face
+    \item Predicted emotion
+\end{itemize}
 \subsubsection{Machine Learning Design}
 The random forest machine learning model for emotion detection was developed through several steps with the goal to optimize performance. Before deciding on random forests as the primary model, several other machine learning approaches were explored, including Support Vector Machines (SVM), boosting, and neural networks. This process is discussed more thoroughly in the discussion headline of this report.\\ The first step in building the model was identifying and preparing a dataset suitable for the emotion detection task. \\ \textcolor{red}{\textbf{(Adrià, please provide details about the dataset, such as its source, size, and any preprocessing steps applied)}}\\
 Once the dataset was prepared, it was split into an 80\% training set and a 20\% test set using stratified sampling to keep the original class distribution. An initial analysis of the class distribution revealed significant imbalances in the emotion categories:
@@ -139,6 +140,7 @@ Model performance was assessed using a classification report that included preci
 \texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%.\\
 
 \subsubsection{Combined Functionality of server and ML-model}
+%TODO
 
 \subsection{Interaction sub-system} %Walter + Danyal
 This section discusses the second subsystem of Bart the bartender. 

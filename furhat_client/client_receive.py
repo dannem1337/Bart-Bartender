@@ -36,13 +36,15 @@ async def listen_and_process(furhat, chat, message_queue):
     }
     while True:
         # Spin on while if there is no costumer there
+
         furhat.say(text="Hello, what Cocktail can I get for you?", blocking=True)
         result = None
         while result is None or result.message == '' or message_data is None:
             print("in while")
             while not message_queue.empty():
                 message_data = await message_queue.get()
-                collected_messages[message_data['emotions'][0]] += 1
+                #Get emotion from the largest face
+                collected_messages[message_data['emotions'][message_data['biggest_face']]] += 1
                 print(f"Processed message data: {message_data}")
 
             if result is None or result.message == '':
@@ -52,25 +54,10 @@ async def listen_and_process(furhat, chat, message_queue):
 
         while True:
             print(collected_messages)
-            prompt = "Now answer keeping in mind that i am "
             # Only considering 1 person
             if message_data['no_faces'] == 0: continue
             current_emotion = max(collected_messages, key= lambda x: collected_messages[x])
-            match current_emotion:
-                case "angry":
-                    prompt += "angry\n"
-                case "neutral":
-                    prompt += "neutral\n"
-                case "happy":
-                    prompt += "happy\n"
-                case "suprised":
-                    prompt += "suprised\n"
-                case "fear":
-                    prompt += "concerned\n"
-                case "disgust":
-                    prompt += "disgusted\n"
-                case "sad":
-                    prompt += "sad\n"
+            prompt = f" Now answer keeping in mind that i am {current_emotion} and when answering, acknowledge that i am {current_emotion} and then suggest a drink based on that i am feeling {current_emotion}"
             print("user message is: " + prompt + result.message)
             ai_response = chat.send_message(prompt + result.message)
             print("AI response is: " + ai_response.text)
@@ -88,7 +75,6 @@ async def listen_and_process(furhat, chat, message_queue):
                 }
                 while not message_queue.empty():
                     message_data = await message_queue.get()
-                print("we are done")
                 break
             result = await asyncio.to_thread(furhat.listen)
 
