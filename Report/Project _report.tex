@@ -17,12 +17,13 @@
 
 \begin{document}
 
-\title{Bart the Bartender}
+\title{Bart the bartender\\
+}
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Danyal Mirza}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{}\\
-Uppsala, Sweden\\
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{Uppsala University (UU)}\\
+Uppsala, Sweden \\
 danyal.mirza.7311@student.uu.se}
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Linnéa Soto Carlsson}
@@ -32,16 +33,16 @@ Uppsala, Sweden \\
 Linnea.sotocarlsson.7666@student.uu.se}
 
 \and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
+\IEEEauthorblockN{3\textsuperscript{rd} Walter Levens}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{Uppsala University (UU)}\\
+Uppsala, Sweden \\
+walter.levens.8542@student.uu.se}
 \and
-\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
+\IEEEauthorblockN{4\textsuperscript{th} Adrià Irigaray Pola}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+\textit{Uppsala University (UU)}\\
+Uppsala, Sweden \\
 email address or ORCID}
 
 }
@@ -78,7 +79,7 @@ Teamwork within the group was collaborative and efficient, where meaningful disc
 \\
 This section describes the methodology and system architecture used in the project.
 
-\subsection{Overall system design}
+\subsection{Overall system design}\label{sec:overallsysdesg}
 \textbf{Linnea + Danyal}
 
 
@@ -102,7 +103,7 @@ To achieve these goals, the system consists of two sub-systems: the \textbf{perc
 \\
 \subsection{User perception sub-system}
 \textbf{Linnea + Danyal}
-\subsubsection{Server design}
+\subsubsection{Server design}\label{sec:serverdesign}
 To allow emotion detection, a video server had to be created that captured video of user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
 \begin{itemize}
     \item Number of faces detected
@@ -143,12 +144,12 @@ Model performance was assessed using a classification report that included preci
 %TODO
 
 \subsection{Interaction sub-system} %Walter + Danyal
-This section discusses the second subsystem of Bart the bartender. 
+This section discusses the second subsystem of Bart the bartender, which handles the interaction with the user. 
 It goes over the high-level design and its implementation. 
 Afterwards it evaluates the obtained results.
 
 \subsubsection{Design}
-The interaction sub-system in this project consists of the virtual Furhat, Gemini and a connection to the video server.
+The interaction sub-system in this project consists of the virtual Furhat, as described in section \ref{sec:overallsysdesg}, Gemini and a connection to the video server, which has been described in section \ref{sec:serverdesign}.
 Furhat is used as the interface between the system and the user and Gemini is used to generate a response to the input of the user.
 The response is based on what the user says and what emotion is detected in the face of the user at the beginning of the conversation.
 This response is then sent to Furhat so that it can reply to the user.
