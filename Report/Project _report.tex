@@ -140,9 +140,6 @@ Model performance was assessed using a classification report that included preci
 \\The above mentioned process was repeated but this time without the SMOTE to compare the performances of the resulting models. This process proved the model without the SMOTE to be the best performing model. This model had the Best Hyperparameters: 
 \texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%.\\
 
-\subsubsection{Combined Functionality of server and ML-model}
-%TODO
-
 \subsection{Interaction sub-system} %Walter + Danyal
 This section discusses the second subsystem of Bart the bartender, which handles the interaction with the user. 
 It goes over the high-level design and its implementation. 
@@ -154,6 +151,9 @@ Furhat is used as the interface between the system and the user and Gemini is us
 The response is based on what the user says and what emotion is detected in the face of the user at the beginning of the conversation.
 This response is then sent to Furhat so that it can reply to the user.
 This process is repeated until the right drink is found for the user.
+
+\subsubsection{Considering a group of people}
+When there is a group of people, the bartender considers the person who is closest to Furhat which matches the logic of how a bartender would work. If there is a queue of people waiting to order, it does not make sense to interact with a person who is not first in the queue. The logic of deciding who is closest to Furhat is decided by who has the biggest face box. If there are two people equally close Furhat, the choice of who to consider becomes undecidable and both faces may be considered. However, we deem this to be a reasonable interaction.
 
 \subsubsection{Implementation}
 The typical flow of this subsystem is as follows: 

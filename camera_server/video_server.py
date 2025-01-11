@@ -59,15 +59,17 @@ def detectFaces(frame, detector, model):
     print(emotions)
     int_face = []
     face = detected_faces[0]
-    biggest_face = [0, 0]
     for f in face:
         int_face.append([int(round(v)) for v in f])
-        #Logic for calculating largest face
-        for i, pos in enumerate(int_face):
-            area = (pos[2]-pos[0]) * (pos[3]-pos[1])
-            if biggest_face[0] < area:
-                biggest_face[0] = area
-                biggest_face[1] = i
+
+    #Logic for calculating largest face
+    biggest_face = [0, 0]
+    for i, pos in enumerate(int_face):
+        area = (pos[2]-pos[0]) * (pos[3]-pos[1])
+        if biggest_face[0] < area:
+            biggest_face[0] = area
+            biggest_face[1] = i
+
     message = {
         "emotions": emotions,
         "no_faces": len(face),
