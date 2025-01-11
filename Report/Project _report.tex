@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{hyperref}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -207,14 +208,15 @@ By doing this, we hope to make the conversation as pleasant as possible.
 
 \section{General Discussion}
 Adria\\
-The path to selecting the Random Forest model involved several steps and a lot of experimentation with different approaches. First we explored building our own neural networks, specifically multilayer feedforward neural networks using a gradient backpropagation algorithm. We tested various architectures to improve the accuracy of emotion classification. However, this approach was highly time-consuming in terms of training and optimizing the networks. The results were also often unstable, and fine-tuning the neural network models required more resources and time than the scope of our project and expertise would allow.
-\\
-Next we found a pre-trained model for facial recognition from a competition on Kaggle \textcolor{red}{\textbf(reference to the Kaggle model)}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right. \\
-Due to this we shifted our focus to other machine learning methods. We experimented with Support Vector Machines (SVM), Boosting models, and finally, Random Forest models. After thorough testing, we found that the Random Forest model had best balance of accuracy and stability even though we would preferably have wanted to have more time to improve its results, this was however not possible considering our work load combined with other courses. The RF-model performance was consistent across test runs, and due to this it ultimately became the chosen model for our system.
+
 \subsection{Overall Pipeline}
 Adria
 \subsection{Challenges}
-Adria
+Adria\\
+The path to selecting the Random Forest model involved several steps and a lot of experimentation with different approaches. First we explored building our own neural networks, specifically multilayer feedforward neural networks using a gradient backpropagation algorithm. We tested various architectures to improve the accuracy of emotion classification. However, this approach was highly time-consuming in terms of training and optimizing the networks. The results were also often unstable, and fine-tuning the neural network models required more resources and time than the scope of our project and expertise would allow.
+\\
+Next we found a pre-trained model for facial recognition from a competition on Kaggle\cite{kaggle}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right. \\
+Due to this we shifted our focus to other machine learning methods. We experimented with Support Vector Machines (SVM), Boosting models, and finally, Random Forest models. After thorough testing, we found that the Random Forest model had best balance of accuracy and stability even though we would preferably have wanted to have more time to improve its results, this was however not possible considering our work load combined with other courses. The RF-model performance was consistent across test runs, and due to this it ultimately became the chosen model for our system.
 \subsection{Use of ChatGPT and other tools}
 
 ChatGPT has been used to assist in resolving error messages in the code and to discuss different ways to optimize machine learning techniques. The information provided by ChatGPT has been cross-verified with other sources, including GeeksforGeeks and the official Python documentation for specific packages. Using ChatGPT helped streamline our workflow by providing quick solutions to technical challenges and offering alternative approaches to improve model performance. Additionally, it saved significant time during debugging and allowed us to focus on implementing and testing new ideas, ultimately enhancing our understanding of machine learning concepts.
@@ -231,6 +233,9 @@ Adria
 
 \begin{thebibliography}{00}
 \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+
+\bibitem{kaggle} Sanskar Hasija, ``Kaggle'' Available:  \href{https://www.kaggle.com/code/odins0n/emotion-detection/notebook?scriptVersionId=84496369}{https://www.kaggle.com/}. Accessed: 2024-11-27.
+
 
 \end{thebibliography}
 
