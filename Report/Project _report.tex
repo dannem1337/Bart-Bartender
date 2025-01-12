@@ -91,16 +91,9 @@ The scenario chosen for this project is as said in previous sections a bartender
     \item \textbf{Emotion Recognition:} Detect the client’s emotional state accurately based on facial expressions.
     \item \textbf{Personalized Drink Recommendations:} Suggest a drink that fits both the emotional state and the individual preferences of the client.
     \item \textbf{Engaging Conversation:} Maintain a pleasant and natural conversation with the client while offering drink recommendations.
-    \item \textbf{Real-Time Interaction:} Provide real-time responses to emotions and preferences without significant delays, ensuring smooth and interactive engagement.
-\\
+    \item \textbf{Real-Time Interaction:} Provide real-time responses to emotions and preferences without significant delays, ensuring smooth and interactive engagement.\\
 \end{enumerate}
-
-\textcolor{red}{\textbf{What specific choices did you make to achieve the high-level goals?}}
-\\
-To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speech input. 
-\\
-\\
-\\
+To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speech input.\\
 \subsection{User perception sub-system}
 \textbf{Linnea + Danyal}
 \subsubsection{Server design}\label{sec:serverdesign}
@@ -138,7 +131,7 @@ The hyperparameters tuned during this process included:
 The optimization process had 5-fold cross-validation.
 Model performance was assessed using a classification report that included precision, recall, F1-score, and accuracy.
 \\The above mentioned process was repeated but this time without the SMOTE to compare the performances of the resulting models. This process proved the model without the SMOTE to be the best performing model. This model had the Best Hyperparameters: 
-\texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%.\\
+\texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%. To asses the generalizability of the model a out-of-bag (OOB) score was also calculated. The model has an OOB-score of 0.45 which is close to the accuracy score of the model, indicating that the model is good at generalizing to unseen data\cite{OOB}.\\
 
 \subsection{Interaction sub-system} %Walter + Danyal
 This section discusses the second subsystem of Bart the bartender, which handles the interaction with the user. 
@@ -236,7 +229,7 @@ Adria
 
 \begin{thebibliography}{00}
 \bibitem{kaggle} Sanskar Hasija, ``Kaggle'' Available:  \href{https://www.kaggle.com/code/odins0n/emotion-detection/notebook?scriptVersionId=84496369}{https://www.kaggle.com/}. Accessed: 2024-11-27.
-
+\bibitem{OOB} H. L. Smith, P. J. Biggs, N. P. French, A. N. H. Smith, J. C. Marshall, ``Out of (the) bag—encoding categorical predictors impacts out-of-bag samples,'' November 18, 2024. \href{https://doi.org/10.7717/peerj-cs.2445}{DOI: 10.7717/peerj-cs.2445}.
 
 \end{thebibliography}
 
