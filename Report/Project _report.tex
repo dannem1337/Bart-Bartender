@@ -43,7 +43,7 @@ walter.levens.8542@student.uu.se}
 \IEEEauthorblockA{\textit{Department of Computer Science} \\
 \textit{Uppsala University (UU)}\\
 Uppsala, Sweden \\
-email address or ORCID}
+adria.irigaray@estudiantat.upc.edu}
 
 }
 
@@ -60,7 +60,7 @@ component, formatting, style, styling, insert.
 \end{IEEEkeywords}
 
 \section{Introduction}
-\textbf{Linnea + Danyal}\\
+
 The objective of the project was to design and develop "Bart", a bartender capable of reading the user's emotional state and providing drink recommendations aligning with the detected mood while engaging in a pleasant conversation. In addition, the system takes into account the individual drink preferences of the users to ensure a satisfying experience. These specific objectives were chosen in the beginning of the project, as the group members believed they were essential for creating a meaningful project connected to the course work. 
 The work for this project was divided into two primary subsystems: the Perception Subsystem and the Interaction Subsystem. 
 
@@ -75,12 +75,11 @@ The work for this project was divided into two primary subsystems: the Perceptio
 Teamwork within the group was collaborative and efficient, where meaningful discussions helped solving problems encountered throughout the project. The writing of the report was divided equally among the members, and each person primarily contributed to their specific area of work.
 \\
 \section{Methodology}
-\textbf{Linnea + Danyal}
-\\
+
 This section describes the methodology and system architecture used in the project.
 
 \subsection{Overall system design}\label{sec:overallsysdesg}
-\textbf{Linnea + Danyal}
+
 
 
 The scenario chosen for this project is as said in previous sections a bartender. The primary task of Bart, our bartender, is to analyze the customer's emotional state and offer drink recommendations based on their mood. Additionally, the system personalizes the recommendations by taking into account the customer's individual drink preferences from engaging in a pleasant conversation with the customer. This ensures a more enjoyable experience.\\The system consists of multiple parts combined into one functional, smooth system accomplishing the below stated high level goals.\\
@@ -95,7 +94,7 @@ The scenario chosen for this project is as said in previous sections a bartender
 \end{enumerate}
 To achieve these goals, the system consists of two sub-systems: the \textbf{perception subsystem} and the \textbf{interaction subsystem}. The perception sub-system consists of a video socket server recognizing faces combined with a machine learning model classifying emotions of recognized faces. The interaction sub-system consists of a client establishing contact with the video server, the client is integrated with Furhat, a social robot platform which is designed to enable human-like interaction through multimodal communication. Furhat have advanced speech synthesis, facial animations and gesture recognition. Furhat provides a remote API which makes it possible for us to control, design and interact with the robot over a network. Together with the client and Furhat, a Large Language Model (LLM), Gemini is integrated to the interaction subsystem to enable a response to the user speech input.\\
 \subsection{User perception sub-system}
-\textbf{Linnea + Danyal}
+
 \subsubsection{Server design}\label{sec:serverdesign}
 To allow emotion detection, a video server had to be created that captured video of user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
 \begin{itemize}
@@ -213,7 +212,7 @@ By doing this, we hope to make the conversation as pleasant as possible.
 % - make sure the conversation is pleasant -> subjective, hard to tell (conduct interviews etc.)
 
 \section{General Discussion}
-Adria\\
+
 
 \subsection{Overall Pipeline}
 \begin{figure}[!h]
