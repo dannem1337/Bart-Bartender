@@ -216,7 +216,20 @@ By doing this, we hope to make the conversation as pleasant as possible.
 Adria\\
 
 \subsection{Overall Pipeline}
-Adria
+\begin{figure}[!h]
+    \includegraphics[width=\linewidth]{pipeline.png}
+    \caption{How our system works.}
+    \label{fig:pipeline}
+  \end{figure}
+
+Our system works by separating the video server from the Furhat client. The video server (Seen in Fig.1) constantly captures an image,
+gets the face box and the AU values, predicts and emotion from the AUs and sends a message with the number of faces, the emotions found, and which emotion corresponds to the largest face.
+
+The Furhat client then accumulates the emotions until the user responds to the initial question: "Hello, what Cocktail can I get for you?".
+It then uses the most displayed emotion to indicate the LLM how to act alongside the user input.
+
+Once the user decides a drink Bart says "Here you go!" as an indication that the conversation is finished and the accumulated values are reset to 0 so that
+it can start attending the next client.
 \subsection{Challenges}
 We had initial issues training due to the low ammount of data. However, once this was solved training progressed more steadily.
 
