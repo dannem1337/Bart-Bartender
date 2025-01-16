@@ -104,7 +104,17 @@ To allow emotion detection, a video server had to be created that captured video
     \item Predicted emotion
 \end{itemize}
 \subsubsection{Machine Learning Design}
-The random forest machine learning model for emotion detection was developed through several steps with the goal to optimize performance. Before deciding on random forests as the primary model, several other machine learning approaches were explored, including Support Vector Machines (SVM), boosting, and neural networks. This process is discussed more thoroughly in the discussion headline of this report.\\ The first step in building the model was identifying and preparing a dataset suitable for the emotion detection task. \\ \textcolor{red}{\textbf{(Adrià, please provide details about the dataset, such as its source, size, and any preprocessing steps applied)}}\\
+The random forest machine learning model for emotion detection was developed through several steps with the goal to optimize performance. Before deciding on random forests as the primary model, several other machine learning approaches were explored, including Support Vector Machines (SVM), boosting, and neural networks. This process is discussed more thoroughly in the discussion headline of this report.\\ The first step in building the model was identifying and preparing a dataset suitable for the emotion detection task.
+
+We decided to start with the dataset used for Assignment 2 but when used in training and validating the accuracy value would vary a lot. This led us to believe that the low amount of data would make it easy to under-fit or over-fit. To solve this, we decided to expand our dataset from 1,100 entries to 4,300 entries. To make the system a bit more robust we decided to also add data from real faces, we did this because we considered the AI-generated images to have exaggerated proportions in some cases and it may not reflect reality as well. The other dataset used was extracted from a Kaggle Facial Expression Recognition Challenge \cite{kaggle} associated with "ICML 2013 Workshop on Representation Learning". The dataset seemed specially good for this application as its purpose was emotion recognition.
+We still decided to include the first dataset because the more expressive emotions are also useful in a bar scenario later in the night.
+
+For extracting AUs no preprocessing was deemed necessary but we did need some postprocessing, this was
+due to the images being extracted from the internet; some faces were obscured or rotated to the point
+of being unrecognizable by the algorithm. Having a very large amount of entries, we decided to delete any entry with missing values so that them
+machine learning wasn't using "corrupted" data. In the end we had 4300+ images with extracted AU values combined from 2 datasets.
+
+
 Once the dataset was prepared, it was split into an 80\% training set and a 20\% test set using stratified sampling to keep the original class distribution. An initial analysis of the class distribution revealed significant imbalances in the emotion categories:
 \begin{itemize}
     \item Neutral: 20.97\%
@@ -208,10 +218,14 @@ Adria\\
 \subsection{Overall Pipeline}
 Adria
 \subsection{Challenges}
-Adria\\
+We had initial issues training due to the low ammount of data. However, once this was solved training progressed more steadily.
+
+
 The path to selecting the Random Forest model involved several steps and a lot of experimentation with different approaches. First we explored building our own neural networks, specifically multilayer feedforward neural networks using a gradient backpropagation algorithm. We tested various architectures to improve the accuracy of emotion classification. However, this approach was highly time-consuming in terms of training and optimizing the networks. The results were also often unstable, and fine-tuning the neural network models required more resources and time than the scope of our project and expertise would allow.
-\\
-Next we found a pre-trained model for facial recognition from a competition on Kaggle\cite{kaggle}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right. \\
+
+
+Next we found a pre-trained model for facial recognition from a competition on Kaggle\cite{kaggle}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right.
+
 Due to this we shifted our focus to other machine learning methods. We experimented with Support Vector Machines (SVM), Boosting models, and finally, Random Forest models. After thorough testing, we found that the Random Forest model had best balance of accuracy and stability even though we would preferably have wanted to have more time to improve its results, this was however not possible considering our work load combined with other courses. The RF-model performance was consistent across test runs, and due to this it ultimately became the chosen model for our system.
 \subsection{Use of ChatGPT and other tools}
 
@@ -220,16 +234,33 @@ ChatGPT has been used to assist in resolving error messages in the code and to d
 AI has also been used as a proof reader of our project report and gave us valuable help with formulation of sentences and handling of grammatical errors. This significantly improved the flow and readability of our report. 
 
 \subsection{Ethical Issues}
-Adria
+Due to the nature of our project the main ethical issues that we could encounter would be related to the LLM system.
+We don't use our own model so many things are left for Gemini and its API. For example, we do not apply any filters to the LLM's response.
+This means that if the user is rude to the AI there's nothing stopping it from insulting back or being generally unpleasant. Right now there's nothing stopping
+The AI from recommending things that are not available or other similar issues. We are also not aware of how secure is the communication between the robot
+and the LLM servers so there is a possibility of personal information being leaked.
+
+We are less concerned about information storage on our end, the user's AUs are only stored in RAM until the emotion is detected and conversations are not stored.
+The only information we store is the emotional state of the user but that gets reset after every drink.
+
+The other possible issue found is the replacement of bartenders. With the project so far this is unlikely,
+our system doesn't prepare the cocktails so a human element is still needed (unless the system works like a soda machine but
+it wouldn't be pleasant). Even if it were not needed Bart has a limited capacity to give conversation about recent events so it would be lonely if not accompanied by a flesh and blood bartender.
+
 
 
 
 \section*{Conclusion}
-Adria
+Bart tool is very useful for busy days and maybe more socially awkward costumers. Before implementation on a buisness additional information like
+the current menu, which are the house special drinks, information about the restaurant's facilities and other similar information should be added
+to the system so that it can answer correctly customer questions. More training would be necessary as Bart only picks up on expressive faces
+but doesn't quite work with more muted facial expressions. 
 
 \begin{thebibliography}{00}
-\bibitem{kaggle} Sanskar Hasija, ``Kaggle'' Available:  \href{https://www.kaggle.com/code/odins0n/emotion-detection/notebook?scriptVersionId=84496369}{https://www.kaggle.com/}. Accessed: 2024-11-27.
+\bibitem{kaggle} Dumitru , ``Kaggle'' Available:  \href{https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/overview}{https://www.kaggle.com/}. Contest associated with the ICML 2013 Workshop on Representation Learning.
+
 \bibitem{OOB} H. L. Smith, P. J. Biggs, N. P. French, A. N. H. Smith, J. C. Marshall, ``Out of (the) bag—encoding categorical predictors impacts out-of-bag samples,'' November 18, 2024. \href{https://doi.org/10.7717/peerj-cs.2445}{DOI: 10.7717/peerj-cs.2445}.
+
 
 \end{thebibliography}
 
