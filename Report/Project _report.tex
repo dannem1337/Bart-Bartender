@@ -96,7 +96,7 @@ To achieve these goals, the system consists of two sub-systems: the \textbf{perc
 \subsection{User perception sub-system}
 
 \subsubsection{Server design}\label{sec:serverdesign}
-To allow emotion detection, a video server had to be created that captured video of the user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
+To allow emotion detection, a video server had to be created that captured video of the user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat~\cite{py-feat} to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
 \begin{itemize}
     \item Number of faces detected
     \item Index of the largest face
@@ -108,7 +108,7 @@ The random forest machine learning model for emotion detection was developed thr
 We decided to start with the dataset used for Assignment 2 but when used in training and validating the accuracy value would vary a lot. This led us to believe that the low amount of data would make it easy to under-fit or over-fit. To solve this, we decided to expand our dataset from 1,100 entries to 4,300 entries. To make the system a bit more robust we decided to also add data from real faces, we did this because we considered the AI-generated images to have exaggerated proportions in some cases and it may not reflect reality as well. The other dataset used was extracted from a Kaggle Facial Expression Recognition Challenge \cite{kaggle} associated with "ICML 2013 Workshop on Representation Learning". The dataset seemed specially good for this application as its purpose was emotion recognition.
 We still decided to include the first dataset because the more expressive emotions are also useful in a bar scenario later in the night.
 
-For extracting AUs no preprocessing was deemed necessary but we did need some postprocessing, this was
+For extracting AUs no preprocessing was deemed necessary but we did need some post-processing, this was
 due to the images being extracted from the internet; some faces were obscured or rotated to the point
 of being unrecognizable by the algorithm. Having a very large amount of entries, we decided to delete any entry with missing values so that them
 machine learning wasn't using "corrupted" data. In the end we had 4300+ images with extracted AU values combined from 2 datasets.
@@ -155,7 +155,7 @@ This response is then sent to Furhat so that it can reply to the user.
 This process is repeated until the right drink is found for the user.
 
 \subsubsection{Considering a group of people}
-When there is a group of people, the bartender considers the person who is closest to Furhat which matches the logic of how a bartender would work. If there is a queue of people waiting to order, it does not make sense to interact with a person who is not first in the queue. The logic of deciding who is closest to Furhat is decided by who has the biggest face box. If there are two people equally close Furhat, the choice of who to consider becomes undecidable and both faces may be considered. However, we deem this to be a reasonable interaction.
+When there is a group of people, the bartender considers the person who is closest to Furhat which matches the logic of how a bartender would work. If there is a queue of people waiting to order, it does not make sense to interact with a person who is not first in the queue. The logic of deciding who is closest to Furhat is decided by who has the biggest face box. If there are two people equally close to Furhat, the choice of who to consider becomes undecidable and both faces may be considered. However, we deem this to be a reasonable interaction.
 
 \subsubsection{Implementation}
 The typical flow of this subsystem is as follows: 
@@ -236,7 +236,7 @@ We had initial issues training due to the low ammount of data. However, once thi
 The path to selecting the Random Forest model involved several steps and a lot of experimentation with different approaches. First we explored building our own neural networks, specifically multilayer feedforward neural networks using a gradient backpropagation algorithm. We tested various architectures to improve the accuracy of emotion classification. However, this approach was highly time-consuming in terms of training and optimizing the networks. The results were also often unstable, and fine-tuning the neural network models required more resources and time than the scope of our project and expertise would allow.
 
 
-Next we found a pre-trained model for facial recognition from a competition on Kaggle\cite{kaggle}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right.
+Next we found a pre-trained model for facial recognition from a competition on Kaggle~\cite{kaggle}. We experimented with replication of the model adjusted to our own expertise. This did approach did however not lead to desired outcomes. Even though pre-trained models were allowed, we decided against using them unmodified because we wanted the work to reflect our own understanding and contributions. Given that the machine learning model was a major component of the project, relying on someone else’s model did not feel right.
 
 Due to this we shifted our focus to other machine learning methods. We experimented with Support Vector Machines (SVM), Boosting models, and finally, Random Forest models. After thorough testing, we found that the Random Forest model had best balance of accuracy and stability even though we would preferably have wanted to have more time to improve its results, this was however not possible considering our work load combined with other courses. The RF-model performance was consistent across test runs, and due to this it ultimately became the chosen model for our system.
 \subsection{Use of ChatGPT and other tools}
@@ -269,6 +269,9 @@ to the system so that it can answer correctly customer questions. More training 
 but doesn't quite work with more muted facial expressions. 
 
 \begin{thebibliography}{00}
+
+\bibitem{py-feat} E. Jollin, J. H. Cheong, T. Xie, L. J. Chang ``py-feat'', Accessed: January 16, 2025 Available:  \href{https://py-feat.org/pages/intro.html}{https://www.py-feat.org/}.
+
 \bibitem{kaggle} Dumitru , ``Kaggle'' Available:  \href{https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/overview}{https://www.kaggle.com/}. Contest associated with the ICML 2013 Workshop on Representation Learning.
 
 \bibitem{OOB} H. L. Smith, P. J. Biggs, N. P. French, A. N. H. Smith, J. C. Marshall, ``Out of (the) bag—encoding categorical predictors impacts out-of-bag samples,'' November 18, 2024. \href{https://doi.org/10.7717/peerj-cs.2445}{DOI: 10.7717/peerj-cs.2445}.

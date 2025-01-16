@@ -26,8 +26,8 @@ model=genai.GenerativeModel(
 async def listen_and_process(furhat, chat, message_queue):
     message_data = None
     collected_messages = {
-        "angry": 0,
         "neutral": 0,
+        "angry": 0,
         "happy": 0,
         "surprise": 0,
         "fear": 0,
@@ -54,7 +54,6 @@ async def listen_and_process(furhat, chat, message_queue):
 
         while True:
             print(collected_messages)
-            # Only considering 1 person
             if message_data['no_faces'] == 0: continue
             current_emotion = max(collected_messages, key= lambda x: collected_messages[x])
             prompt = f" Now answer keeping in mind that i am {current_emotion} and when answering, acknowledge that i am {current_emotion} and then suggest a drink based on that i am feeling {current_emotion}"
@@ -65,8 +64,8 @@ async def listen_and_process(furhat, chat, message_queue):
             if "Here you go!" in ai_response.text:
                 # Reset, new person incoming
                 collected_messages = {
-                    "angry": 0,
                     "neutral": 0,
+                    "angry": 0,
                     "happy": 0,
                     "surprise": 0,
                     "fear": 0,
