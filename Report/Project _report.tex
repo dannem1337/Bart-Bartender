@@ -52,11 +52,11 @@ adria.irigaray@estudiantat.upc.edu}
 % For citations use \cite{x}, where x is defined as \bibitem{x} in references
 
 \begin{abstract}
-\textbf{Linnea + Danyal}
+\textbf This project report presents the development of "Bart," an intelligent bartender capable of reading users emotional state based on facial expression and providing personalized drink recommendations while engaging in pleasant conversation. The system is constructed of two primary subsystems, the perception subsystem and the interaction subsystem. The perception subsystem uses a video server and a Random Forest machine learning model to detect faces and classify emotions while the interaction subsystem utilizes the Furhat robot and a Large Language Model (Gemini) to translate detected emotions and user preferences into personalized drink suggestions. The emotion detection model has an accuracy of 46.46\% and an Out-of-bag score of 0.45 which indicate good generalization.\\ 
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert.
+Facial recognition, Machine learning, LLM, AI
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -96,7 +96,7 @@ To achieve these goals, the system consists of two sub-systems: the \textbf{perc
 \subsection{User perception sub-system}
 
 \subsubsection{Server design}\label{sec:serverdesign}
-To allow emotion detection, a video server had to be created that captured video of user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
+To allow emotion detection, a video server had to be created that captured video of the user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
 \begin{itemize}
     \item Number of faces detected
     \item Values representing location of the face
@@ -140,7 +140,7 @@ The hyperparameters tuned during this process included:
 The optimization process had 5-fold cross-validation.
 Model performance was assessed using a classification report that included precision, recall, F1-score, and accuracy.
 \\The above mentioned process was repeated but this time without the SMOTE to compare the performances of the resulting models. This process proved the model without the SMOTE to be the best performing model. This model had the Best Hyperparameters: 
-\texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%. To asses the generalizability of the model a out-of-bag (OOB) score was also calculated. The model has an OOB-score of 0.45 which is close to the accuracy score of the model, indicating that the model is good at generalizing to unseen data\cite{OOB}.\\
+\texttt{(bootstrap: True, max\_depth: 30, max\_features: sqrt, min\_samples\_leaf: 1, min\_samples\_split: 2, n\_estimators: 100)}. The model has the accuracy of 46.46\%. To asses the generalizability of the model an out-of-bag (OOB) score was also calculated. The model has an OOB-score of 0.45 which is close to the accuracy score of the model, indicating that the model is good at generalizing to unseen data\cite{OOB}.\\
 
 \subsection{Interaction sub-system} %Walter + Danyal
 This section discusses the second subsystem of Bart the bartender, which handles the interaction with the user. 
