@@ -35,12 +35,12 @@ async def listen_and_process(furhat, chat, message_queue):
         "sad": 0
     }
     while True:
-        # Spin on while if there is no costumer there
 
         furhat.say(text="Hello, what Cocktail can I get for you?", blocking=True)
         result = None
         while result is None or result.message == '' or message_data is None:
             print("in while")
+            # Spin on while if there is no costumer there
             while not message_queue.empty():
                 message_data = await message_queue.get()
                 #Get emotion from the largest face
@@ -58,8 +58,8 @@ async def listen_and_process(furhat, chat, message_queue):
             if message_data['no_faces'] == 0: continue
             current_emotion = max(collected_messages, key= lambda x: collected_messages[x])
             prompt = f" Now answer keeping in mind that i am {current_emotion} and when answering, acknowledge that i am {current_emotion} and then suggest a drink based on that i am feeling {current_emotion}"
-            print("user message is: " + prompt + result.message)
-            ai_response = chat.send_message(prompt + result.message)
+            print("user message is: " + result.message + prompt)
+            ai_response = chat.send_message(result.message + prompt)
             print("AI response is: " + ai_response.text)
             furhat.say(text=ai_response.text, blocking = True)
             if "Here you go!" in ai_response.text:
@@ -88,12 +88,8 @@ async def handle_socket(sock, message_queue):
             print('Socket connection closed')
             break
 
-        # Decode and process message
         decoded_message = message.decode('utf-8')
-        # print(f"Received from socket: {decoded_message}")
 
-        # load to dictionary
-        # message_data = json.loads(decoded_message)
         try:
             message_data = json.loads(decoded_message)
             # Send message to the queue for processing

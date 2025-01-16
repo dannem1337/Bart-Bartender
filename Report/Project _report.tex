@@ -99,7 +99,7 @@ To achieve these goals, the system consists of two sub-systems: the \textbf{perc
 To allow emotion detection, a video server had to be created that captured video of the user interacting with Furhat. The video server begins with establishing a socket connection with the Furhat client to allow communication between the two subsystems. The server then begins capturing video and for each current frame uses py-feat to detect faces and AU-values are then sent to our trained machine learning model to predict emotion. A message containing the following information is then sent to the client via the socket connections:
 \begin{itemize}
     \item Number of faces detected
-    \item Values representing location of the face
+    \item Index of the largest face
     \item Predicted emotion
 \end{itemize}
 \subsubsection{Machine Learning Design}
